@@ -1,0 +1,38 @@
+# ROOT
+.swift
+# TODO.md
+.vscode
+gitsht
+
+# CLIENT
+client/node_modules
+client/dist
+client/dist-ssr
+client/*.local
+client/.vite
+client/logs
+client/*.log
+client/npm-debug.log*
+client/yarn-debug.log*
+client/yarn-error.log*
+client/pnpm-debug.log*
+client/lerna-debug.log*
+client/.idea
+client/.DS_Store
+client/*.suo
+client/*.ntvs*
+client/*.njsproj
+client/*.sln
+client/*.sw?
+client/.env
+
+# SERVER
+server/node_modules
+server/auto
+server/dist
+server/dist
+server/.env
+server/prisma/migrations
+server/prisma/database
+server/src/json/credentials.json
+

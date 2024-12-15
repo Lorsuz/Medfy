@@ -69,10 +69,10 @@ export default function QuestionCard({
           <p>{question.questionId}</p>
         </QuestionIdContainer>
 
-        {question.category_history.map((classItem, index) => (
+        {question.categoryHistory.map((classItem, index) => (
           <ClassContainer key={classItem}>
             {classItem}
-            {index < question.category_history.length - 1 && (
+            {index < question.categoryHistory.length - 1 && (
               <IoMdArrowDropright color="#ADADAD" />
             )}
           </ClassContainer>
@@ -85,7 +85,7 @@ export default function QuestionCard({
         </YearContainer>
         <LocalContainer>
           <span>Local: </span>
-          <p>{question.college_name}</p>
+          <p>{question.collegeName}</p>
         </LocalContainer>
       </YearAndLocalContainer>
       <QuestionContent>

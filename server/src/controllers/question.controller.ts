@@ -28,7 +28,7 @@ export const getQuestions = expressAsyncHandler( async ( req: any, res, next ) =
 							q.justification,
 							q.year,
 							q.cancelled,
-							col.name AS college_name,
+							col.name AS collegeName,
 							cat.categoryName,
 							GROUP_CONCAT(o.optionText ORDER BY o.id SEPARATOR '|') AS options,
 							GROUP_CONCAT(o.isRight ORDER BY o.id SEPARATOR '|') AS isRights
@@ -55,10 +55,10 @@ export const getQuestions = expressAsyncHandler( async ( req: any, res, next ) =
 		const formattedQuestions = questions.map( ( q: any ) => ( {
 			questionId: q.questionId,
 			question: q.question,
-			image_url: q.image_url,
+			imageUrl: q.imageUrl,
 			justification: q.justification,
 			year: q.year,
-			college_name: q.college_name,
+			collegeName: q.collegeName,
 			categoryName: q.categoryName,
 			options: q.options.split( '|' ).map( ( opt: string, index: number ) => ( {
 				option: opt,
@@ -87,11 +87,11 @@ export const getQuestion = expressAsyncHandler( async ( req: any, res, next ) =>
 			`SELECT 
 							q.id AS questionId,
 							q.question,
-							q.image_url,
+							q.imageUrl,
 							q.justification,
 							q.year,
 							q.cancelled,
-							col.name AS college_name,
+							col.name AS collegeName,
 							cat.categoryName,
 							GROUP_CONCAT(o.optionText ORDER BY o.id SEPARATOR '|') AS options,
 							GROUP_CONCAT(o.isRight ORDER BY o.id SEPARATOR '|') AS isRights
@@ -113,10 +113,10 @@ export const getQuestion = expressAsyncHandler( async ( req: any, res, next ) =>
 		const formattedQuestion = {
 			questionId: question.questionId,
 			question: question.question,
-			image_url: question.image_url,
+			imageUrl: question.imageUrl,
 			justification: question.justification,
 			year: question.year,
-			college_name: question.college_name,
+			collegeName: question.collegeName,
 			categoryName: question.categoryName,
 			options: question.options.split( '|' ).map( ( opt: string, index: number ) => ( {
 				option: opt,
@@ -148,7 +148,7 @@ export const createQuestion = expressAsyncHandler( async ( req: any, res, next )
 
 			// Inserir a questão no banco de dados
 			const [ rows ]: any = await pool.query(
-				'INSERT INTO questions (categoryId, collegeId, question, justification, year, image_url) VALUES (?, ?, ?, ?, ?, ?)',
+				'INSERT INTO questions (categoryId, collegeId, question, justification, year, imageUrl) VALUES (?, ?, ?, ?, ?, ?)',
 				[ categoryId, collegeId, question, justification, year, imageUrl ]
 			);
 
@@ -186,7 +186,7 @@ export const updateQuestion = expressAsyncHandler( async ( req: any, res, next )
 
 			// Atualizar a questão no banco de dados
 			await pool.query(
-				'UPDATE questions SET categoryId = ?, collegeId = ?, question = ?, justification = ?, year = ?, image_url = ? WHERE id = ?',
+				'UPDATE questions SET categoryId = ?, collegeId = ?, question = ?, justification = ?, year = ?, imageUrl = ? WHERE id = ?',
 				[ categoryId, collegeId, question, justification, year, imageUrl, questionId ]
 			);
 
@@ -250,10 +250,10 @@ export const getAvailableQuestions = expressAsyncHandler( async ( req: any, res,
 			`SELECT 
 							q.id AS questionId,
 							q.question,
-							q.image_url,
+							q.imageUrl,
 							q.justification,
 							q.year,
-							col.name AS college_name,
+							col.name AS collegeName,
 							GROUP_CONCAT(o.optionText ORDER BY o.id SEPARATOR '|') AS options,
 							GROUP_CONCAT(o.isRight ORDER BY o.id SEPARATOR '|') AS isRights,
 							q.categoryId
@@ -281,16 +281,16 @@ export const getAvailableQuestions = expressAsyncHandler( async ( req: any, res,
 		const questionDetails = await Promise.all(
 			questions.map( async ( q: any ) => {
 				const [ categoryHistory ]: any = await pool.query(
-					`WITH RECURSIVE category_path AS (
+					`WITH RECURSIVE categoryPath AS (
 											SELECT id, categoryName, parentId
 											FROM categories
 											WHERE id = ?
 											UNION ALL
 											SELECT c.id, c.categoryName, c.parentId
 											FROM categories c
-											INNER JOIN category_path cp ON c.id = cp.parentId
+											INNER JOIN categoryPath cp ON c.id = cp.parentId
 									)
-									SELECT categoryName FROM category_path ORDER BY id`,
+									SELECT categoryName FROM categoryPath ORDER BY id`,
 					[ q.categoryId ]
 				);
 
@@ -300,7 +300,7 @@ export const getAvailableQuestions = expressAsyncHandler( async ( req: any, res,
 
 				return {
 					...q,
-					category_history: categoryHistory.map( ( cat: any ) => cat.categoryName ),
+					categoryHistory: categoryHistory.map( ( cat: any ) => cat.categoryName ),
 					options: options.map( ( opt: string, index: number ) => ( {
 						option: opt,
 						isRight: isRights[ index ],
@@ -310,6 +310,23 @@ export const getAvailableQuestions = expressAsyncHandler( async ( req: any, res,
 		);
 
 		// Retornar questões com detalhes
+		/* 
+		{
+			questionId: number,
+			question: string,
+			imageUrl: string,
+			justification: string,
+			year: number,
+			collegeName: string,
+			options: [
+				{
+					option: string,
+					isRight: boolean
+				}
+			],
+			categoryHistory: string[]
+		}
+		*/
 		res.json( questionDetails );
 	} catch ( error ) {
 		next( error );

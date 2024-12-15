@@ -205,15 +205,15 @@ def analyze_question_with_gpt(question, option_right, cursor):
         print(f"Erro ao analisar questão: {e}")
         return "Indefinido", "Erro ao processar a justificativa"
 
-def get_or_create_college(db, cursor, college_name, acronym):
-    cursor.execute("SELECT id FROM colleges WHERE name = %s AND acronym = %s", (college_name, acronym))
+def get_or_create_college(db, cursor, collegeName, acronym):
+    cursor.execute("SELECT id FROM colleges WHERE name = %s AND acronym = %s", (collegeName, acronym))
     college = cursor.fetchone()
     
     if college:
         return college[0]
     else:
         sql = "INSERT INTO colleges (name, acronym) VALUES (%s, %s)"
-        cursor.execute(sql, (college_name, acronym))
+        cursor.execute(sql, (collegeName, acronym))
         db.commit()
         return cursor.lastrowid 
 
@@ -244,15 +244,15 @@ def process_pdf(db, pdf_path, cursor):
         text = re.sub(r"([A-Z\sÉÇÃÕÍÚÔ]+) - (\w{2,}) (\d{4})",'', text)
         
         if match_header:
-            college_name = match_header.group(1).strip() or 'Faculdade Desconhecida'
+            collegeName = match_header.group(1).strip() or 'Faculdade Desconhecida'
             acronym = match_header.group(2).strip() or 'N/A'
             year = match_header.group(3).strip() or '0000'
         else:
-            college_name = "Faculdade Desconhecida"
+            collegeName = "Faculdade Desconhecida"
             acronym = "N/A"
             year = "0000"
 
-        collegeId = get_or_create_college(db, cursor, college_name, acronym)
+        collegeId = get_or_create_college(db, cursor, collegeName, acronym)
         questions = re.findall(r'\d+\)\s(.*?)(?=\d+\)\s[A-ZÉ]|1\s[A-E])', text, re.DOTALL)
         gabarito = re.findall(r"\d+\s([A-E!])", text[-550:])
         

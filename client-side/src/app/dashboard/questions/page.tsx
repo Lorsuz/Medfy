@@ -14,11 +14,11 @@ export interface Question {
   justification: string;
   image?: string;
   year: number;
-  college_name: string;
+  collegeName: string;
   options: QuestionOption[];
   isRights: string;
   categoryId: number;
-  category_history: string[];
+  categoryHistory: string[];
 }
 
 export default function Questions() {
@@ -30,7 +30,7 @@ export default function Questions() {
       justification:
         "A acetilcolina é o neurotransmissor responsável por transmitir o impulso nervoso na junção neuromuscular.",
       year: 2024,
-      college_name: "Faculdade de Medicina",
+      collegeName: "Faculdade de Medicina",
       options: [
         { option: "Acetilcolina", isRight: true },
         { option: "Dopamina", isRight: false },
@@ -39,7 +39,7 @@ export default function Questions() {
       ],
       isRights: "Acetilcolina",
       categoryId: 201,
-      category_history: ["Neurociência", "Fisiologia Médica"],
+      categoryHistory: ["Neurociência", "Fisiologia Médica"],
     },
     {
       questionId: 5123,
@@ -49,7 +49,7 @@ export default function Questions() {
       image:
         "https://qcon-assets-production.s3.amazonaws.com/images/provas/91250/Captura_de%20Tela%20%28174%29.png",
       year: 2023,
-      college_name: "Universidade de Ciências Médicas",
+      collegeName: "Universidade de Ciências Médicas",
       options: [
         { option: "Mycobacterium tuberculosis", isRight: true },
         { option: "Staphylococcus aureus", isRight: false },
@@ -58,7 +58,7 @@ export default function Questions() {
       ],
       isRights: "Mycobacterium tuberculosis",
       categoryId: 202,
-      category_history: ["Infectologia", "Microbiologia"],
+      categoryHistory: ["Infectologia", "Microbiologia"],
     },
     {
       questionId: 7842,
@@ -67,7 +67,7 @@ export default function Questions() {
       justification:
         "O ciclo de Krebs é fundamental para a geração de ATP, uma vez que produz moléculas de NADH e FADH2 que transferem elétrons para a cadeia transportadora de elétrons.",
       year: 2022,
-      college_name: "Instituto de Biociências",
+      collegeName: "Instituto de Biociências",
       options: [
         { option: "Produção de energia na forma de ATP", isRight: false },
         { option: "Geração de NADH e FADH2", isRight: true },
@@ -76,7 +76,7 @@ export default function Questions() {
       ],
       isRights: "Geração de NADH e FADH2",
       categoryId: 203,
-      category_history: ["Bioquímica", "Fisiologia"],
+      categoryHistory: ["Bioquímica", "Fisiologia"],
     },
     {
       questionId: 9001,
@@ -85,7 +85,7 @@ export default function Questions() {
       justification:
         "O princípio da incerteza de Heisenberg estabelece que é impossível determinar simultaneamente, com precisão, a posição e o momento de uma partícula subatômica.",
       year: 2021,
-      college_name: "Departamento de Física Teórica",
+      collegeName: "Departamento de Física Teórica",
       options: [
         {
           option: "A energia de uma partícula não pode ser medida",
@@ -105,7 +105,7 @@ export default function Questions() {
       isRights:
         "A posição e o momento não podem ser determinados com precisão ao mesmo tempo",
       categoryId: 301,
-      category_history: ["Física Quântica", "Filosofia da Ciência"],
+      categoryHistory: ["Física Quântica", "Filosofia da Ciência"],
     },
     {
       questionId: 4512,
@@ -114,7 +114,7 @@ export default function Questions() {
       justification:
         "O aquecimento global causa o aumento da temperatura dos oceanos, o que afeta a biodiversidade, provoca branqueamento de corais e altera os ciclos alimentares marinhos.",
       year: 2020,
-      college_name: "Faculdade de Biologia Marinha",
+      collegeName: "Faculdade de Biologia Marinha",
       options: [
         {
           option: "Aumenta a biodiversidade devido ao aquecimento das águas",
@@ -138,7 +138,7 @@ export default function Questions() {
       isRights:
         "Reduz a diversidade de espécies devido às mudanças nas condições ambientais",
       categoryId: 302,
-      category_history: ["Ecologia", "Mudanças Climáticas"],
+      categoryHistory: ["Ecologia", "Mudanças Climáticas"],
     },
     {
       questionId: 7842,
@@ -147,7 +147,7 @@ export default function Questions() {
       justification:
         "O ciclo de Krebs é fundamental para a geração de ATP, uma vez que produz moléculas de NADH e FADH2 que transferem elétrons para a cadeia transportadora de elétrons.",
       year: 2022,
-      college_name: "Instituto de Biociências",
+      collegeName: "Instituto de Biociências",
       options: [
         { option: "Produção de energia na forma de ATP", isRight: false },
         { option: "Geração de NADH e FADH2", isRight: true },
@@ -156,7 +156,7 @@ export default function Questions() {
       ],
       isRights: "Geração de NADH e FADH2",
       categoryId: 203,
-      category_history: ["Bioquímica", "Fisiologia"],
+      categoryHistory: ["Bioquímica", "Fisiologia"],
     },
     {
       questionId: 9001,
@@ -167,7 +167,7 @@ export default function Questions() {
       justification:
         "O princípio da incerteza de Heisenberg estabelece que é impossível determinar simultaneamente, com precisão, a posição e o momento de uma partícula subatômica.",
       year: 2021,
-      college_name: "Departamento de Física Teórica",
+      collegeName: "Departamento de Física Teórica",
       options: [
         {
           option:
@@ -188,7 +188,7 @@ export default function Questions() {
       isRights:
         "A posição e o momento não podem ser determinados com precisão ao mesmo tempo",
       categoryId: 301,
-      category_history: ["Física Quântica", "Filosofia da Ciência"],
+      categoryHistory: ["Física Quântica", "Filosofia da Ciência"],
     },
     {
       questionId: 4512,
@@ -197,7 +197,7 @@ export default function Questions() {
       justification:
         "O aquecimento global causa o aumento da temperatura dos oceanos, o que afeta a biodiversidade, provoca branqueamento de corais e altera os ciclos alimentares marinhos.",
       year: 2020,
-      college_name: "Faculdade de Biologia Marinha",
+      collegeName: "Faculdade de Biologia Marinha",
       options: [
         {
           option: "Aumenta a biodiversidade devido ao aquecimento das águas",
@@ -221,7 +221,7 @@ export default function Questions() {
       isRights:
         "Reduz a diversidade de espécies devido às mudanças nas condições ambientais",
       categoryId: 302,
-      category_history: ["Ecologia", "Mudanças Climáticas"],
+      categoryHistory: ["Ecologia", "Mudanças Climáticas"],
     },
   ];
 
@@ -232,8 +232,8 @@ export default function Questions() {
           Questões <span className="text-primary">simuladas</span>.
         </h1>
         <p className="text-muted-foreground text-sm max-w-96">
-          Você está fazendo o simulado, você só pode visualizar seus erros e acertos após responder
-          todas as questões.
+          Você está fazendo o simulado, você só pode visualizar seus erros e
+          acertos após responder todas as questões.
         </p>
       </header>
 
@@ -247,14 +247,14 @@ export default function Questions() {
                     ID: {question.questionId}
                   </span>
 
-                  {question.category_history.map((category, index) => (
+                  {question.categoryHistory.map((category, index) => (
                     <span
                       key={index}
                       className="h-full flex gap-4 items-center text-sm font-medium"
                     >
                       {category}
 
-                      {index !== question.category_history.length - 1 && (
+                      {index !== question.categoryHistory.length - 1 && (
                         <ChevronRight size={16} />
                       )}
                     </span>
@@ -266,7 +266,7 @@ export default function Questions() {
                     <b>Ano:</b> {question.year}
                   </span>
                   <span>
-                    <b>Local:</b> {question.college_name}
+                    <b>Local:</b> {question.collegeName}
                   </span>
                 </div>
               </div>

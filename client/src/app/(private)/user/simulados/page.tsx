@@ -71,7 +71,7 @@ export default function Questions() {
       justification:
         "A acetilcolina é o neurotransmissor responsável por transmitir o impulso nervoso na junção neuromuscular.",
       year: 2024,
-      college_name: "Faculdade de Medicina",
+      collegeName: "Faculdade de Medicina",
       options: [
         { option: "Acetilcolina", isRight: true },
         { option: "Dopamina", isRight: false },
@@ -80,7 +80,7 @@ export default function Questions() {
       ],
       isRights: "Acetilcolina",
       categoryId: 201,
-      category_history: ["Neurociência", "Fisiologia Médica"],
+      categoryHistory: ["Neurociência", "Fisiologia Médica"],
     },
     {
       questionId: 2,
@@ -88,7 +88,7 @@ export default function Questions() {
       justification:
         "O Mycobacterium tuberculosis é a bactéria causadora da tuberculose, uma doença infecciosa que afeta principalmente os pulmões.",
       year: 2023,
-      college_name: "Universidade de Ciências Médicas",
+      collegeName: "Universidade de Ciências Médicas",
       options: [
         { option: "Mycobacterium tuberculosis", isRight: true },
         { option: "Staphylococcus aureus", isRight: false },
@@ -97,7 +97,7 @@ export default function Questions() {
       ],
       isRights: "Mycobacterium tuberculosis",
       categoryId: 202,
-      category_history: ["Infectologia", "Microbiologia"],
+      categoryHistory: ["Infectologia", "Microbiologia"],
     },
   ];
 

@@ -179,7 +179,22 @@ Content-Type: application/json
 #   - college: integer (optional)
 #   - category: integer (optional)
 #   - total: integer (optional, default: 10)
-# Response: JSON object containing filtered questions.
+# Response: JSON object containing filtered questions
+#   {
+# 		questionId: number,
+# 		question: string,
+# 		imageUrl: string,
+# 		justification: string,
+# 		year: number,
+# 		collegeName: string,
+# 		options: [
+# 			{
+# 				option: string,
+# 				isRight: boolean
+# 			}
+# 		],
+# 		categoryHistory: string[]
+# 	}[]
 # Access: Private
 GET {{base}}/question/get-available
 Content-Type: application/json

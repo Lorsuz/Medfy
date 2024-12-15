@@ -20,6 +20,8 @@ import questionRouter from './routers/question.router.js';
 
 const app: Application = express();
 
+console.log( `APP_URL: ${ process.env.APP_URL }` );
+
 app.use( bodyParser.json() );
 app.use( cookieParser() );
 app.use( cors(

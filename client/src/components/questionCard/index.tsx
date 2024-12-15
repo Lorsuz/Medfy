@@ -32,7 +32,7 @@ import { IoMdArrowDropright } from "react-icons/io";
 import { FaScissors } from "react-icons/fa6";
 import ReportQuestionDialog from "../reportQuestionDialog";
 import { Question } from "@/utils/services/fetchQuestions";
-import { ResponseOfQuestions } from "@/app/(private)/user/questions/page";
+import { ResponseOfQuestions } from "@/app/(private)/user/simu/page";
 
 export interface ResponseOfSelectedQuestion {
   isRight: boolean;

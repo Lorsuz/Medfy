@@ -59,6 +59,9 @@
 			"@util/*": [
 				"./src/utils/*"
 			],
+			"@service/*": [
+				"./src/utils/services/*"
+			],
 			"@config/*": [
 				"./src/utils/configs/*"
 			],

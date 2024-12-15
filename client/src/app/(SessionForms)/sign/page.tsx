@@ -1,12 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import LoginForm from "@/components/forms/LoginForm";
 import RegisterForm from "@/components/forms/RegisterForm";
 import Image from "next/image";
 import styled from "styled-components";
 import MedfyLogo from "@image/medfy_logo.svg";
-import HomeImage from "@image/home_image.svg";
 import React from "react";
 
 const AuthActionButton = ({
@@ -42,11 +41,7 @@ export default function LoginOrRegister() {
   const [selectedButton, setSelectedButton] = useState<string>("login");
 	
   return (
-		<StyledComponent $isActive={selectedButton}>
-      <section className="logo">
-        <Image src={MedfyLogo} alt="logo image" />
-      </section>
-      <section className="authentication-form">
+		<StyledComponent $isActive={selectedButton} className="form-container">
         <header>
           <Image src={MedfyLogo} alt="logo image" />
           <h1>Bem-vindo a Medfy Academy</h1>
@@ -68,52 +63,12 @@ export default function LoginOrRegister() {
         ) : (
           <RegisterForm></RegisterForm>
         )}
-      </section>
     </StyledComponent>
   );
 }
 
-const StyledComponent = styled.main<{ $isActive: any }>`
-  background: var(--theme-color) url(${HomeImage.src}) fixed center;
-  background-size: 400px;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  align-items: center;
-	justify-content: center;
-	padding: 5dvw;
-
-  @media (max-width: 1100px) {
-    display: flex;
-  }
-  .logo {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    img {
-      width: 100%;
-      height: 100%;
-      max-width: 400px;
-			filter: drop-shadow(-10px 10px 0px #E8E2F8);
-
-      max-height: 400px;
-    }
-    @media (max-width: 1100px) {
-      display: none;
-    }
-  }
-
-  .authentication-form {
-    background: #ffffffdc;
-		border: 2px solid #ffffff;
-    padding: 30px;
-		backdrop-filter: blur(10px);
-		max-width: 800px;
-    border-radius: 15px;
-    grid-column: 2;
-		box-shadow: -5px 5px 15px 0 #000000b9, 5px -5px 15px 0 #ffffff42;
-
+const StyledComponent = styled.section<{ $isActive: any }>`
     header {
-      flex: 1 1 100%;
       display: flex;
       flex-direction: column;
       align-content: center;
@@ -134,5 +89,4 @@ const StyledComponent = styled.main<{ $isActive: any }>`
     .toggle-form {
       display: flex;
     }
-  }
 `;

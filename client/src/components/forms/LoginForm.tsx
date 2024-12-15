@@ -68,7 +68,7 @@ const LoginForm = () => {
         error={errors.password?.message}
       />
 
-      <Link href="/forgot-password">Esqueci a senha</Link>
+      <Link href="/forgot-password">Esqueci minha senha</Link>
     </AuthFormBase>
   );
 };

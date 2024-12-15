@@ -126,6 +126,7 @@ const StyledComponent = styled.div<{ $size: string }>`
       justify-content: center;
       svg {
         font-size: 1.2rem;
+				color: var(--theme-color);
       }
     }
   }

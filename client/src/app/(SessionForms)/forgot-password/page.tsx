@@ -9,7 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import z from "zod";
 import fetchApi from "@service/fetchApi";
 import { toast } from "react-toastify";
-
+import Link from "next/link";
 const schemaLocal = z.object({
   email: z
     .string()
@@ -21,6 +21,7 @@ const schemaLocal = z.object({
 type SchemaLocal = z.infer<typeof schemaLocal>;
 
 export default function ForgotPassword() {
+
   const router = useRouter();
   const {
     register,
@@ -55,6 +56,7 @@ export default function ForgotPassword() {
           {...register("email")}
           error={errors.email?.message}
         />
+        <Link href="/sign">Voltar ao login</Link>
       </AuthFormBase>
     </StyledComponent>
   );

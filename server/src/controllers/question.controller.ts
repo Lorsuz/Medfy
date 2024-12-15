@@ -23,21 +23,21 @@ export const getQuestions = expressAsyncHandler( async ( req: any, res, next ) =
 		// Passo 1: Obter todas as questões com dados relacionados
 		const [ questions ]: any = await pool.query(
 			`SELECT 
-							q._id AS questionId,
+							q.id AS questionId,
 							q.question,
 							q.justification,
 							q.year,
 							q.cancelled,
 							col.name AS college_name,
 							cat.categoryName,
-							GROUP_CONCAT(o.optionText ORDER BY o._id SEPARATOR '|') AS options,
-							GROUP_CONCAT(o.isRight ORDER BY o._id SEPARATOR '|') AS isRights
+							GROUP_CONCAT(o.optionText ORDER BY o.id SEPARATOR '|') AS options,
+							GROUP_CONCAT(o.isRight ORDER BY o.id SEPARATOR '|') AS isRights
 					FROM questions q
-					INNER JOIN colleges col ON q.collegeId = col._id
-					INNER JOIN categories cat ON q.categoryId = cat._id
-					LEFT JOIN options o ON o.questionId = q._id
+					INNER JOIN colleges col ON q.collegeId = col.id
+					INNER JOIN categories cat ON q.categoryId = cat.id
+					LEFT JOIN options o ON o.questionId = q.id
 					WHERE q.cancelled = 0
-					GROUP BY q._id
+					GROUP BY q.id
 					LIMIT ? OFFSET ?`,
 			[ parseInt( limit ), offset ]
 		);
@@ -85,7 +85,7 @@ export const getQuestion = expressAsyncHandler( async ( req: any, res, next ) =>
 		// Passo 1: Obter a questão com dados relacionados
 		const [ questions ]: any = await pool.query(
 			`SELECT 
-							q._id AS questionId,
+							q.id AS questionId,
 							q.question,
 							q.image_url,
 							q.justification,
@@ -93,14 +93,14 @@ export const getQuestion = expressAsyncHandler( async ( req: any, res, next ) =>
 							q.cancelled,
 							col.name AS college_name,
 							cat.categoryName,
-							GROUP_CONCAT(o.optionText ORDER BY o._id SEPARATOR '|') AS options,
-							GROUP_CONCAT(o.isRight ORDER BY o._id SEPARATOR '|') AS isRights
+							GROUP_CONCAT(o.optionText ORDER BY o.id SEPARATOR '|') AS options,
+							GROUP_CONCAT(o.isRight ORDER BY o.id SEPARATOR '|') AS isRights
 					FROM questions q
-					INNER JOIN colleges col ON q.collegeId = col._id
-					INNER JOIN categories cat ON q.categoryId = cat._id
-					LEFT JOIN options o ON o.questionId = q._id
-					WHERE q._id = ? AND q.cancelled = 0
-					GROUP BY q._id`,
+					INNER JOIN colleges col ON q.collegeId = col.id
+					INNER JOIN categories cat ON q.categoryId = cat.id
+					LEFT JOIN options o ON o.questionId = q.id
+					WHERE q.id = ? AND q.cancelled = 0
+					GROUP BY q.id`,
 			[ id ]
 		);
 
@@ -172,8 +172,6 @@ export const createQuestion = expressAsyncHandler( async ( req: any, res, next )
 
 export const getAvailableQuestions = expressAsyncHandler( async ( req: any, res, next ) => {
 	try {
-		console.log( "req.body" );
-		console.log( "req.body" );
 
 		const { year, college, category, total } = req.body;
 		const userId = req.user.id;
@@ -190,40 +188,40 @@ export const getAvailableQuestions = expressAsyncHandler( async ( req: any, res,
 							FROM categories
 							WHERE id = ?
 							UNION ALL
-							SELECT c._id, c.categoryName, c.parentId
+							SELECT c.id, c.categoryName, c.parentId
 							FROM categories c
-							INNER JOIN category_tree ct ON c.parentId = ct._id
+							INNER JOIN category_tree ct ON c.parentId = ct.id
 					)
 					SELECT id FROM category_tree`,
 			[ category ]
 		);
 
-		const categoryIds = categories.map( ( cat: any ) => cat._id );
+		const categoryIds = categories.map( ( cat: any ) => cat.id );
 
 		// Passo 2: Buscar questões disponíveis
 		const [ questions ]: any = await pool.query(
 			`SELECT 
-							q._id AS questionId,
+							q.id AS questionId,
 							q.question,
 							q.image_url,
 							q.justification,
 							q.year,
 							col.name AS college_name,
-							GROUP_CONCAT(o.optionText ORDER BY o._id SEPARATOR '|') AS options,
-							GROUP_CONCAT(o.isRight ORDER BY o._id SEPARATOR '|') AS isRights,
+							GROUP_CONCAT(o.optionText ORDER BY o.id SEPARATOR '|') AS options,
+							GROUP_CONCAT(o.isRight ORDER BY o.id SEPARATOR '|') AS isRights,
 							q.categoryId
 					FROM questions q
-					INNER JOIN colleges col ON q.collegeId = col._id
-					INNER JOIN options o ON o.questionId = q._id
+					INNER JOIN colleges col ON q.collegeId = col.id
+					INNER JOIN options o ON o.questionId = q.id
 					WHERE q.categoryId IN (?) 
 						AND q.year = ? 
 						AND q.collegeId = ?
-						AND q._id NOT IN (
+						AND q.id NOT IN (
 								SELECT questionId 
 								FROM userResponses 
 								WHERE userId = ?
 						)
-					GROUP BY q._id
+					GROUP BY q.id
 					LIMIT ?`,
 			[ categoryIds, year, college, userId, parseInt( total ) || 10 ]
 		);
@@ -241,9 +239,9 @@ export const getAvailableQuestions = expressAsyncHandler( async ( req: any, res,
 											FROM categories
 											WHERE id = ?
 											UNION ALL
-											SELECT c._id, c.categoryName, c.parentId
+											SELECT c.id, c.categoryName, c.parentId
 											FROM categories c
-											INNER JOIN category_path cp ON c._id = cp.parentId
+											INNER JOIN category_path cp ON c.id = cp.parentId
 									)
 									SELECT categoryName FROM category_path ORDER BY id`,
 					[ q.categoryId ]

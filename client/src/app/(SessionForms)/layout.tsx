@@ -25,6 +25,10 @@ const StyledComponent = styled.main`
   align-items: center;
   justify-content: center;
   padding: 5dvw;
+	*{
+		user-select:none;
+	}
+  
 
   @media (max-width: 1100px) {
     display: flex;
@@ -52,18 +56,32 @@ const StyledComponent = styled.main`
     padding: 30px;
     backdrop-filter: blur(10px);
     max-width: 800px;
+    width: 100%;
     border-radius: 15px;
     grid-column: 2;
     box-shadow: -5px 5px 15px 0 #000000b9, 5px -5px 15px 0 #ffffff42;
+
     h2 {
       color: var(--theme-color);
       font-weight: 700;
+      font-size: 1.7rem;
       margin-bottom: 1rem;
+      text-align: center;
     }
 
     p {
       margin-bottom: 1.5rem;
-			color: #656565;
+      text-align: center;
+      color: #656565;
     }
+  }
+	@media (max-width: 500px) {
+    padding: 0;
+		
+		section.form-container{
+			border-radius:0;
+			padding:100px 5dvw 50px;
+			min-height:100vh;
+		}
   }
 `;

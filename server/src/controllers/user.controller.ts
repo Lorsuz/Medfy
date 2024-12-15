@@ -158,7 +158,12 @@ export const verifyToken = expressAsyncHandler( async ( req, res, next ) => {
 				console.error( 'Nenhuma linha foi atualizada' );
 			}
 			await pool.execute( 'DELETE FROM tokens WHERE userId = ?', [ token.userId ] );
-			res.status( 200 ).redirect( 'https://medfy.vercel.app/' );
+			if ( process.env.APP_URL !== '' ) {
+				res.status( 200 ).redirect( process.env.APP_URL || '' );
+				return;
+			}
+			res.status( 200 ).send( 'Usuário verificado com sucesso' );
+
 		} else {
 			res.status( 400 ).json( { message: 'Invalid token' } );
 		}
@@ -344,7 +349,7 @@ export const requestPasswordReset = expressAsyncHandler( async ( req, res, next 
 		const { email } = resetPasswordSchema.parse( req.body ); // valida o e-mail
 		const [ existingUsers ]: any = await pool.execute( 'SELECT * FROM users WHERE email = ?', [ email ] );
 		if ( existingUsers.length === 0 ) {
-			throw new ApiError("E-mail não encontrado", 404)
+			throw new ApiError( "E-mail não encontrado", 404 );
 
 		}
 
@@ -370,48 +375,48 @@ export const requestPasswordReset = expressAsyncHandler( async ( req, res, next 
  * @access       Public
  **/
 
-export const resetPassword = expressAsyncHandler(async (req, res, next) => {
+export const resetPassword = expressAsyncHandler( async ( req, res, next ) => {
 	try {
-			const { token, password } = newPasswordSchema.parse(req.body);
+		const { token, password } = newPasswordSchema.parse( req.body );
 
-			// Busca o userId e a senha antiga em uma única consulta
-			const [result]:any[] = await pool.execute(
-					`SELECT users.id AS userId, users.password AS oldPassword
+		// Busca o userId e a senha antiga em uma única consulta
+		const [ result ]: any[] = await pool.execute(
+			`SELECT users.id AS userId, users.password AS oldPassword
 					 FROM tokens
 					 INNER JOIN users ON tokens.userId = users.id
 					 WHERE tokens.token = ?`,
-					[token]
-			);
+			[ token ]
+		);
 
-			if (result.length === 0) {
-					throw new ApiError("Token inválido ou expirado", 400);
-			}
+		if ( result.length === 0 ) {
+			throw new ApiError( "Token inválido ou expirado", 400 );
+		}
 
-			const { userId, oldPassword } = result[0];
+		const { userId, oldPassword } = result[ 0 ];
 
-			// Compara a nova senha com a antiga
-			const isSamePassword = await bcrypt.compare(password, oldPassword);
-			if (isSamePassword) {
-					throw new ApiError("A nova senha não pode ser igual à senha anterior", 400);
-			}
+		// Compara a nova senha com a antiga
+		const isSamePassword = await bcrypt.compare( password, oldPassword );
+		if ( isSamePassword ) {
+			throw new ApiError( "A nova senha não pode ser igual à senha anterior", 400 );
+		}
 
-			// Hash da nova senha
-			const hashedPassword = await bcrypt.hash(password, 10);
+		// Hash da nova senha
+		const hashedPassword = await bcrypt.hash( password, 10 );
 
-			// Atualiza a senha do usuário
-			await pool.execute(
-					'UPDATE users SET password = ? WHERE id = ?',
-					[hashedPassword, userId]
-			);
+		// Atualiza a senha do usuário
+		await pool.execute(
+			'UPDATE users SET password = ? WHERE id = ?',
+			[ hashedPassword, userId ]
+		);
 
-			// Remove o token usado
-			await pool.execute('DELETE FROM tokens WHERE userId = ?', [userId]);
+		// Remove o token usado
+		await pool.execute( 'DELETE FROM tokens WHERE userId = ?', [ userId ] );
 
-			res.status(200).json({ message: 'Senha redefinida com sucesso' });
-	} catch (error) {
-			next(error);
+		res.status( 200 ).json( { message: 'Senha redefinida com sucesso' } );
+	} catch ( error ) {
+		next( error );
 	}
-});
+} );
 
 
 // #endregion

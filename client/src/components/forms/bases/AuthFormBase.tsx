@@ -36,10 +36,12 @@ const StyledComponent = styled.form<{ $isSubmitting: boolean }>`
     width: 100%;
     text-align: right;
     grid-column: 1/3;
-    color: var(--theme-color);
+    color: #5d5d5d;
     font-weight: 700;
+		font-size: 0.9rem;
     &:hover {
-      text-decoration: underline;
+			text-decoration: underline;
+			color: var(--theme-color);
     }
   }
   > button {

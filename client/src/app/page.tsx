@@ -1,11 +1,15 @@
 "use client";
-import React from "react";
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
-const page = () => {
+const Page = () => {
   const router = useRouter();
-	router.push("/sign");
-  return <></>;
+
+  useEffect(() => {
+    router.push("/sign");
+  }, [router]);
+
+  return null;
 };
 
-export default page;
+export default Page;

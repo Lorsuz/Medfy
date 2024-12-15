@@ -7,10 +7,7 @@ import "normalize.css";
 import { ToastContainer } from "react-toastify";
 import ReduxProvider from '@provider/ReduxProvider'; 
 import "react-toastify/dist/ReactToastify.css";
-import { loadEnvConfig } from '@next/env';
 
-const projectDir = process.cwd();
-loadEnvConfig(projectDir);
 const inter = Inter({
   subsets: ["latin"],
   display: "swap",
@@ -36,7 +33,15 @@ export default function RootLayout({
         <ReduxProvider>
           <StyledComponentsRegistry>
             {children}
-            <ToastContainer />
+            <ToastContainer position="top-right"
+              autoClose={3000}
+              hideProgressBar={false}
+              newestOnTop={false}
+              closeOnClick
+              rtl={false}
+              pauseOnFocusLoss
+              draggable
+              pauseOnHover/>
           </StyledComponentsRegistry>
         </ReduxProvider>
         </React.StrictMode>}

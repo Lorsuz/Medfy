@@ -13,6 +13,7 @@ import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import InputText from "@component/forms/fields/InputText";
 import { toast } from "react-toastify";
+import Link from "next/link";
 
 const schemaLocal = z
   .object({
@@ -69,12 +70,16 @@ export default function page({
     try {
       delete data.confirmPassword;
       data = { ...data, token };
-      const response: any = await fetchApi("/user/reset-password", data, "POST");
-			console.log("response: ",'message' in response)
-			if(response ) {
-				router.push("/sign");
-				toast.success(response.message)
-			}
+      const response: any = await fetchApi(
+        "/user/reset-password",
+        data,
+        "POST"
+      );
+      console.log("response: ", "message" in response);
+      if (response) {
+        router.push("/sign");
+        toast.success(response.message);
+      }
     } catch (error: any) {
       console.error(error.message);
     }
@@ -83,6 +88,10 @@ export default function page({
   return (
     <StyledComponent className="form-container">
       <h2>Crie uma nova senha</h2>
+      <p>
+        Para criar uma nova senha, digite nos campos abaixo a nova senha e a
+        confirmação da senha.
+      </p>
       <AuthFormBase
         onSubmit={handleSubmit(handleRedirectPage)}
         buttonText="Salvar"
@@ -104,6 +113,7 @@ export default function page({
           {...register("confirmPassword")}
           error={errors.confirmPassword?.message}
         />
+        <Link href="/sign">Continuar login</Link>
       </AuthFormBase>
     </StyledComponent>
   );

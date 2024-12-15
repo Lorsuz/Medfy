@@ -2,7 +2,6 @@
 @port = 3001
 @host = http://localhost:{{port}}
 @base = {{host}}/api
-@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJpYXQiOjE3MzA0NjA1NDIsImV4cCI6MTczMDU0Njk0Mn0.qiMy0NGKoFmJCvp0N4NVh6JlMawDR9gyhRbY4wUv9yU
 
 # ! Connection Test
 ### * Test the connection to the configured host
@@ -12,7 +11,6 @@ GET {{host}}
 
 ### * Import all pre-admins
 POST {{base}}/user/import-all
-Authorization: {{token}}
 
 ### * Register new user
 POST {{base}}/user/register
@@ -20,9 +18,10 @@ Content-Type: application/json
 
 {
   "name": "Ariel do Nascimento",
-  "email": "john.doe@gmail.com",
-  "cpf": "701.720.974-52",
-  "password": "#A1b2c3d4"
+  "email": "hayadav160@rustetic.com",
+  "cpf": "893.266.020-44",
+  "password": "#A1b2c3d4",
+  "phone": "(83) 9 9234-5235"
 }
 
 ### * User login
@@ -30,7 +29,7 @@ POST {{base}}/user/login
 Content-Type: application/json
 
 {
-  "email": "john.doe@gmail.com",
+  "email": "hayadav160@rustetic.com",
   "password": "#A1b2c3d4"
 }
 
@@ -45,7 +44,6 @@ Content-Type: application/json
 ### * Change password in settings
 PUT {{base}}/user/change-password
 Content-Type: application/json
-Authorization: {{token}}
 
 {
   "oldPassword": "", 
@@ -55,21 +53,17 @@ Authorization: {{token}}
 ### * User logout
 POST {{base}}/user/logout
 Content-Type: application/json
-Authorization: {{token}}
 
 ### * Delete user account
 DELETE {{base}}/user/
 Content-Type: application/json
-Authorization: {{token}}
 
 # ! Other Endpoints
 
 ### * Process PDF
 POST {{base}}/upload-pdf
 Content-Type: application/json
-Authorization: {{token}}
 
 ### * 
 GET {{base}}/user/
 Content-Type: application/json
-Authorization: {{token}}

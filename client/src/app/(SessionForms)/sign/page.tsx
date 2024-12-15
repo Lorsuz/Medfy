@@ -29,9 +29,10 @@ const StyledButton = styled.button<{ $isActive: boolean }>`
   margin-bottom: 2rem;
   padding: 0.3rem 0;
   flex: 1 1 100%;
+
   border-bottom: ${({ $isActive }) =>
-    $isActive ? "3px solid var(--theme-color)" : "3px solid #a3a3a3"};
-  color: ${({ $isActive }) => ($isActive ? "var(--theme-color)" : "#a3a3a3")};
+    $isActive ? "3px solid var(--theme-color)" : "3px solid #5d5d5d33"};
+  color: ${({ $isActive }) => ($isActive ? "var(--theme-color)" : "#5d5d5dc2")};
   &:hover {
     cursor: pointer;
   }

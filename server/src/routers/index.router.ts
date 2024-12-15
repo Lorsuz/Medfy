@@ -37,20 +37,4 @@ export const uploadPdfWithPy = expressAsyncHandler( async ( req: any, res, next 
 
 router.post( '/upload-pdf-py', upload.single( 'pdf' ), uploadPdfWithPy );
 
-router.get( '/year', async ( req, res, next ) => {
-	try {
-		console.log( "rows"/* , rows */ );
-		const [ rows ]: any = await pool.execute( 'SELECT DISTINCT year FROM questions' );
-
-		if ( !rows ) { 
-			throw new ApiError( 'Nenhum ano encontrado', 404 ); }
-		else {
-			res.json( rows );
-		}
-	} catch ( error ) {
-		next( error );
-	}
-
-} );
-
 export default router;

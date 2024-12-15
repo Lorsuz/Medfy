@@ -169,6 +169,53 @@ export const createQuestion = expressAsyncHandler( async ( req: any, res, next )
 	}
 } );
 
+export const updateQuestion = expressAsyncHandler( async ( req: any, res, next ) => {
+	try {
+		upload( req, res, async ( err: any ) => {
+			if ( err ) {
+				return next( new ApiError( 'Erro no upload da imagem', 400 ) );
+			}
+
+			const { questionId, categoryId, collegeId, question, justification, year, options, optionRight } = req.body;
+
+			// URL da imagem (ou caminho local se for o caso)
+			let imageUrl: any = null;
+			if ( req.file ) {
+				imageUrl = `/uploads/${ req.file.filename }`;
+			}
+
+			// Atualizar a questão no banco de dados
+			await pool.query(
+				'UPDATE questions SET categoryId = ?, collegeId = ?, question = ?, justification = ?, year = ?, image_url = ? WHERE id = ?',
+				[ categoryId, collegeId, question, justification, year, imageUrl, questionId ]
+			);
+
+			// Atualizar as opções de resposta
+			await pool.query( 'DELETE FROM options WHERE questionId = ?', [ questionId ] );
+			const optionsData = options.map( ( option: any, index: number ) => [
+				questionId,
+				option,
+				optionRight == index
+			] );
+			await pool.query( 'INSERT INTO options (questionId, optionText, isRight) VALUES ?', [ optionsData ] );
+
+			res.json( { message: 'Question updated' } );
+		} );
+	} catch ( error ) {
+		next( error );
+	}
+} );
+
+export const deleteQuestion = expressAsyncHandler( async ( req: any, res, next ) => {
+	try {
+		const { id } = req.body;
+		await pool.query( 'DELETE FROM questions WHERE id = ?', [ id ] );
+		res.json( { message: 'Question deleted' } );
+	} catch ( error ) {
+		next( error );
+	}
+} );
+
 
 export const getAvailableQuestions = expressAsyncHandler( async ( req: any, res, next ) => {
 	try {
@@ -279,4 +326,16 @@ export const inativeQuestion = expressAsyncHandler( async ( req: any, res, next 
 	}
 } );
 
-
+export const getYears = expressAsyncHandler( async ( req: any, res, next ) => {
+	try {
+		const [ rows ]: any = await pool.execute( 'SELECT DISTINCT year FROM questions' );
+		if ( !rows ) {
+			throw new ApiError( 'Nenhum ano encontrado', 404 );
+		}
+		else {
+			res.status( 200 ).json( rows );
+		}
+	} catch ( error ) {
+		next( error );
+	}
+} );

@@ -10,12 +10,24 @@ GET {{host}}
 # ! User Endpoints
 
 ### * Import all pre-admins
+# Description: Import all predefined administrators.
+# Request: No body required.
+# Response: Status 200 if successful.
+# Access: Private
 POST {{base}}/user/import-all
 
 ### * Register new user
+# Description: Register a new user.
+# Request:
+#   - name: string (required)
+#   - email: string (required)
+#   - cpf: string (required)
+#   - password: string (required)
+#   - phone: string (optional)
+# Response: JSON object with user details if successful.
+# Access: Public
 POST {{base}}/user/register
 Content-Type: application/json
-
 {
   "name": "Ariel do Nascimento",
   "email": "hayadav160@rustetic.com",
@@ -25,45 +37,155 @@ Content-Type: application/json
 }
 
 ### * User login
+# Description: Log in an existing user.
+# Request:
+#   - email: string (required)
+#   - password: string (required)
+# Response: Authentication token if successful.
+# Access: Public
 POST {{base}}/user/login
 Content-Type: application/json
-
 {
   "email": "hayadav160@rustetic.com",
   "password": "#A1b2c3d4"
 }
 
 ### * Request password reset
+# Description: Request a password reset email.
+# Request:
+#   - email: string (required)
+# Response: Confirmation message if email sent successfully.
+# Access: Public
 POST {{base}}/user/request-reset
 Content-Type: application/json
-
 {
-  "email": "john.doe@gmail.com",
+  "email": "john.doe@gmail.com"
 }
 
 ### * Change password in settings
+# Description: Change user password in settings.
+# Request:
+#   - oldPassword: string (required)
+#   - newPassword: string (required)
+# Response: Confirmation message if successful.
+# Access: Private
 PUT {{base}}/user/change-password
 Content-Type: application/json
-
 {
-  "oldPassword": "", 
+  "oldPassword": "",
   "newPassword": ""
 }
 
 ### * User logout
+# Description: Log out the currently authenticated user.
+# Request: No body required.
+# Response: Confirmation message if successful.
+# Access: Private
 POST {{base}}/user/logout
 Content-Type: application/json
 
 ### * Delete user account
+# Description: Delete the account of the authenticated user.
+# Request: No body required.
+# Response: Confirmation message if successful.
+# Access: Private
 DELETE {{base}}/user/
 Content-Type: application/json
 
 # ! Other Endpoints
 
 ### * Process PDF
+# Description: Upload and process a PDF file.
+# Request: File upload expected.
+# Response: Confirmation message or processing details.
+# Access: Private
 POST {{base}}/upload-pdf
 Content-Type: application/json
 
-### * 
-GET {{base}}/user/
+### * Fetch all questions
+# Description: Retrieve a list of questions.
+# Request: No body required.
+# Response: JSON object containing questions and pagination details.
+# Access: Private
+GET {{base}}/question
 Content-Type: application/json
+
+### * Create a new question
+# Description: Create a new question.
+# Request:
+#   - categoryId: integer (required)
+#   - collegeId: integer (required)
+#   - question: string (required)
+#   - justification: string (optional)
+#   - year: integer (optional)
+#   - options: array of strings (required)
+#   - optionRight: integer (required, index of correct option)
+# Response: Confirmation message and question ID if successful.
+# Access: Private (Admin only)
+POST {{base}}/question
+Content-Type: application/json
+{
+  "categoryId": 1,
+  "collegeId": 2,
+  "question": "What is the capital of France?",
+  "justification": "Paris is the capital of France.",
+  "year": 2024,
+  "options": ["Berlin", "Madrid", "Paris", "Rome"],
+  "optionRight": 2
+}
+
+### * Update a question
+# Description: Update an existing question.
+# Request:
+#   - questionId: integer (required)
+#   - categoryId: integer (optional)
+#   - collegeId: integer (optional)
+#   - question: string (optional)
+#   - justification: string (optional)
+#   - year: integer (optional)
+#   - options: array of strings (optional)
+#   - optionRight: integer (optional)
+# Response: Confirmation message if successful.
+# Access: Private (Admin only)
+PUT {{base}}/question
+Content-Type: application/json
+{
+  "questionId": 1,
+  "categoryId": 1,
+  "collegeId": 2,
+  "question": "Updated question text.",
+  "justification": "Updated justification.",
+  "year": 2024,
+  "options": ["Option A", "Option B", "Option C", "Option D"],
+  "optionRight": 1
+}
+
+### * Delete a question
+# Description: Delete an existing question.
+# Request:
+#   - id: integer (required)
+# Response: Confirmation message if successful.
+# Access: Private (Admin only)
+DELETE {{base}}/question
+Content-Type: application/json
+{
+  "id": 1
+}
+
+### * Fetch available questions
+# Description: Retrieve a filtered list of available questions.
+# Request:
+#   - year: integer (optional)
+#   - college: integer (optional)
+#   - category: integer (optional)
+#   - total: integer (optional, default: 10)
+# Response: JSON object containing filtered questions.
+# Access: Private
+GET {{base}}/question/get-available
+Content-Type: application/json
+{
+	"year": 2024,
+	"college": 2,
+	"category": 1,
+	"total": 5
+}

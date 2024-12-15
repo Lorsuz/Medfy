@@ -27,18 +27,6 @@ CREATE TABLE IF NOT EXISTS options (
 	updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 	FOREIGN KEY (questionId) REFERENCES questions(id) ON DELETE CASCADE
 ) CHARACTER SET utf8 COLLATE utf8_general_ci;
--- Tabela de desempenho
-CREATE TABLE IF NOT EXISTS userPerformance (
-	id INTEGER AUTO_INCREMENT PRIMARY KEY,
-	userId INTEGER NOT NULL,
-	categoryId INTEGER,
-	questionsAnswered INTEGER DEFAULT 0,
-	questionsCorrect INTEGER DEFAULT 0,
-	lastActivity TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-	FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE,
-	FOREIGN KEY (categoryId) REFERENCES categories(id) ON DELETE
-	SET NULL
-) CHARACTER SET utf8 COLLATE utf8_general_ci;
 CREATE TABLE IF NOT EXISTS userResponses (
 	id INTEGER AUTO_INCREMENT PRIMARY KEY,
 	userId INTEGER NOT NULL,
@@ -54,12 +42,8 @@ export const registerPerformance = expressAsyncHandler( async ( req: any, res, n
 	try {
 		const userLogged = req.user.id;
 		const { performance } = req.body;
-		const performanceData = performance.map( ( p: any ) => [ userLogged, p.categoryId, p.questionsAnswered, p.questionsCorrect ] );
-
-		await pool.query( 'INSERT INTO userPerformance ( userId, categoryId, questionsAnswered, questionsCorrect) VALUES ?', [ performanceData ] );
-		// atualizar a tabela userResponses
 		const responseData = performance.map( ( p: any ) => [ userLogged, p.questionId, p.isCorrect ] );
-		await pool.query( 'INSERT INTO userResponses ( userId, questionId, isCorrect ) VALUES ?', [ responseData ] );
+		await pool.execute( 'INSERT INTO userResponses ( userId, questionId, isCorrect ) VALUES ?', [ responseData ] );
 
 		res.status( 201 ).json( { message: "Desempenho registrado com sucesso" } );
 	} catch ( error ) {
@@ -70,42 +54,24 @@ export const registerPerformance = expressAsyncHandler( async ( req: any, res, n
 export const getPerformance = expressAsyncHandler( async ( req: any, res, next ) => {
 	try {
 		const userLogged = req.user.id;
-		const [ rows ] = await pool.query( 'SELECT * FROM userPerformance WHERE userId = ?', [ userLogged ] );
-		if ( !rows ) throw new ApiError( "Nenhum dado de performance de usuário encontrado", 404 );
-
-		res.status( 200 ).json( rows );
+		const [ performance ] = await pool.query( 'SELECT COUNT( isCorrect ) AS total, SUM( isCorrect ) AS correct FROM userResponses WHERE userId = ?', [ userLogged ] );
+		const { total, correct } = performance[ 0 ];
+		const incorrect = total - correct;
+		const percentage = ( correct / total ) * 100;
+		res.status( 200 ).json( { total, correct, incorrect, percentage } );
 	} catch ( error ) {
 		next( error );
 	}
 } );
 
-export const getPerformanceByCategory = expressAsyncHandler( async ( req: any, res, next ) => {
-	try {
-		const userLogged = req.user.id;
-		const { categoryId } = req.body;
-		const [ rows ] = await pool.query( 'SELECT * FROM userPerformance WHERE userId = ? AND categoryId = ?', [ userLogged, categoryId ] );
-		if ( !rows ) throw new ApiError( "Nenhum dado de performance de usuário encontrado", 404 );
-
-		res.status( 200 ).json( rows );
-	} catch ( error ) {
-		next( error );
-	}
-} );
 
 export const updatePerformance = expressAsyncHandler( async ( req: any, res, next ) => {
 	try {
-		// o body vai mandar uma lista de objetos com o desempenho do usuário logado [{questionId: number, isCorrect: boolean}], atualizando os dados da tabela userPerformance e userResponses
 		const userLogged: number = req.user.id;
 		const { responses }: { responses: { questionId: number, isCorrect: boolean; }[]; } = req.body;
 		const performanceData = responses.map( ( p: any ) => [ userLogged, p.questionId, p.isCorrect ] );
 
-		// Atualizar a tabela userResponses
-		await pool.query( 'INSERT INTO userResponses ( userId, questionId, isCorrect ) VALUES ?', [ performanceData ] );
-
-		// Atualizar a tabela userPerformance
-		const correctAnswers = responses.filter( ( r ) => r.isCorrect ).length;
-		const totalAnswers = responses.length;
-		await pool.query( 'INSERT INTO userPerformance ( userId, questionsAnswered, questionsCorrect) VALUES ( ?, ?, ? )', [ userLogged, totalAnswers, correctAnswers ] );
+		await pool.execute( 'INSERT INTO userResponses ( userId, questionId, isCorrect ) VALUES ?', [ performanceData ] );
 
 		res.status( 201 ).json( { message: 'Desempenho registrado com sucesso' } );
 

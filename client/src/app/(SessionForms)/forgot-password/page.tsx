@@ -31,13 +31,9 @@ export default function ForgotPassword() {
   });
 
   async function handleRedirectPage(data: any) {
-    try {
-      delete data.confirmPassword;
-      const response: any = await fetchApi("/user/request-reset", data, "POST");
-      toast.info(response.message);
-    } catch (error: any) {
-      toast.error(error.message);
-    }
+    delete data.confirmPassword;
+    const response: any = await fetchApi("/user/request-reset", data, "POST");
+    if (response) toast.info(response.message);
   }
 
   return (

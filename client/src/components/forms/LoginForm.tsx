@@ -34,7 +34,6 @@ const LoginForm = () => {
       const response = await fetchApi("/user/login", data, "POST");
 			console.log(response);
 			
-			
       if (response) {
 				toast.success("login efetuado com sucesso");
         setIsLogged(true);

@@ -344,14 +344,15 @@ export const requestPasswordReset = expressAsyncHandler( async ( req, res, next 
 		const { email } = resetPasswordSchema.parse( req.body ); // valida o e-mail
 		const [ existingUsers ]: any = await pool.execute( 'SELECT * FROM users WHERE email = ?', [ email ] );
 		if ( existingUsers.length === 0 ) {
-			res.status( 404 ).json( { message: 'E-mail não encontrado' } );
+			throw new ApiError("E-mail não encontrado", 404)
+
 		}
 
 		const userId = existingUsers[ 0 ].id;
 		const token = crypto.randomBytes( 16 ).toString( 'hex' );
 		await pool.execute( 'INSERT INTO tokens (userId, token) VALUES (?, ?) ON DUPLICATE KEY UPDATE token = ?', [ userId, token, token ] );
 
-		const resetUrl = `${ process.env.APP_URL }/api/user/reset-password?token=${ token }`;
+		const resetUrl = `${ process.env.APP_URL }/create-new-password/${ token }`;
 		await sendResetEmail( email, resetUrl );
 		res.status( 200 ).json( { message: 'Verifique seu e-mail para redefinir a senha' } );
 	} catch ( error ) {
@@ -368,24 +369,50 @@ export const requestPasswordReset = expressAsyncHandler( async ( req, res, next 
  * @route        POST /api/user/reset-password
  * @access       Public
  **/
-export const resetPassword = expressAsyncHandler( async ( req, res, next ) => {
+
+export const resetPassword = expressAsyncHandler(async (req, res, next) => {
 	try {
-		const { token, password } = newPasswordSchema.parse( req.body );
-		const [ tokenResult ]: any = await pool.execute( 'SELECT userId FROM tokens WHERE token = ?', [ token ] );
-		if ( tokenResult.length === 0 ) {
-			res.status( 400 ).json( { message: 'Token inválido ou expirado' } );
-		}
+			const { token, password } = newPasswordSchema.parse(req.body);
 
-		const userId = tokenResult[ 0 ].userId;
-		const hashedPassword = await bcrypt.hash( password, 10 );
-		await pool.execute( 'UPDATE users SET password = ? WHERE id = ?', [ hashedPassword, userId ] );
-		await pool.execute( 'DELETE FROM tokens WHERE userId = ?', [ userId ] ); // Remove o token após o uso
+			// Busca o userId e a senha antiga em uma única consulta
+			const [result]:any[] = await pool.execute(
+					`SELECT users.id AS userId, users.password AS oldPassword
+					 FROM tokens
+					 INNER JOIN users ON tokens.userId = users.id
+					 WHERE tokens.token = ?`,
+					[token]
+			);
 
-		res.status( 200 ).json( { message: 'Senha redefinida com sucesso' } );
-	} catch ( error ) {
-		next( error );
+			if (result.length === 0) {
+					throw new ApiError("Token inválido ou expirado", 400);
+			}
+
+			const { userId, oldPassword } = result[0];
+
+			// Compara a nova senha com a antiga
+			const isSamePassword = await bcrypt.compare(password, oldPassword);
+			if (isSamePassword) {
+					throw new ApiError("A nova senha não pode ser igual à senha anterior", 400);
+			}
+
+			// Hash da nova senha
+			const hashedPassword = await bcrypt.hash(password, 10);
+
+			// Atualiza a senha do usuário
+			await pool.execute(
+					'UPDATE users SET password = ? WHERE id = ?',
+					[hashedPassword, userId]
+			);
+
+			// Remove o token usado
+			await pool.execute('DELETE FROM tokens WHERE userId = ?', [userId]);
+
+			res.status(200).json({ message: 'Senha redefinida com sucesso' });
+	} catch (error) {
+			next(error);
 	}
-} );
+});
+
 
 // #endregion
 

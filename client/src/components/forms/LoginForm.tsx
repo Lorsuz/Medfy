@@ -32,17 +32,16 @@ const LoginForm = () => {
   async function handleAuthenticateUser(data: UserLoginSchema) {
     try {
       const response = await fetchApi("/user/login", data, "POST");
-      toast.info(response.message);
-
-      if ("isAdmin" in response) {
+			console.log(response);
+			
+			
+      if (response) {
+				toast.success("login efetuado com sucesso");
         setIsLogged(true);
         dispatch(login(response));
         response.isAdmin
           ? router.push("/admin/dashboard")
           : router.push("/user/dashboard");
-        toast.success("login efetuado com sucesso");
-      } else {
-        toast.error("Algum erro ocorreu");
       }
     } catch (error: any) {
       toast.error(error.message);
@@ -70,7 +69,7 @@ const LoginForm = () => {
         error={errors.password?.message}
       />
 
-      <Link href="/forgotPassword">Esqueci a senha</Link>
+      <Link href="/forgot-password">Esqueci a senha</Link>
     </AuthFormBase>
   );
 };

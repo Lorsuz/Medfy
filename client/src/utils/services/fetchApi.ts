@@ -3,6 +3,7 @@ import { toast } from "react-toastify";
 
 const fetchApi = async ( route: string, data?: {}, method?: "GET" | "POST" | "PUT" | "DELETE" ) => {
 	try {
+    console.log( process.env.NEXT_PUBLIC_API_URL + route)
 		const response = await fetch( process.env.NEXT_PUBLIC_API_URL + route, {
 			method: method || "GET",
 			headers: {
@@ -21,6 +22,7 @@ const fetchApi = async ( route: string, data?: {}, method?: "GET" | "POST" | "PU
 		const res = await response.json()
 		return res;
 	} catch ( error: any ) {
+    console.log(error)
 		console.error( "Erro inesperado: " + error );
 		toast.error(error.message)
 		return undefined;

@@ -21,7 +21,7 @@ const __filename = fileURLToPath( import.meta.url );
 const __dirname = path.dirname( __filename );
 
 	
-const secretKey: string = ( process.env.NODE_ENV !== process.env.PRODUCTION_KEY ? process.env.DEVELOPMENT_KEY : generateStrongKey() ) || "secretKey";
+const secretKey: string = "secretKey";
 
 // mercadopago.configure({
 // 	access_token: 'TEST-5193570165554565-111913-33c96f9e183fcfc52d2b1e4292f97c8a-826294035'

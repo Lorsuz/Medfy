@@ -5,7 +5,7 @@ export const generateToken = ( id: number | string, isAdmin: boolean ): string =
 
 export const isAuthenticated = expressAsyncHandler( async ( req: Request & { user?: any; }, res: Response, next: NextFunction ) => {
 	try {
-		const token = req.cookies.authToken;
+		const token = req.headers.authorization?.split( ' ' )[ 1 ];
 
 		if ( !token ) {
 			throw new ApiError( 'Faça login para acessar esta página', 401 );
@@ -13,7 +13,7 @@ export const isAuthenticated = expressAsyncHandler( async ( req: Request & { use
 
 		const decoded: any = jwt.verify( token, secretKey );
 
-		if ( decoded.id ) {
+		if ( decoded.userId ) {
 			// const [ users ]: any = await pool.query( 'SELECT * FROM users WHERE id = ?', [ decoded.id ] );
 			// if ( users.length > 0 ) {
 			// const user = users[ 0 ];

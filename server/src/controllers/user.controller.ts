@@ -46,6 +46,7 @@ export const importUsers = expressAsyncHandler( async ( req, res, next ) => {
  **/
 
 export const login = expressAsyncHandler( async ( req, res, next ) => {
+	console.log("teste")
 	try {
 		const { email, password } = loginUserSchema.parse( req.body );
 
@@ -75,17 +76,15 @@ export const login = expressAsyncHandler( async ( req, res, next ) => {
 		}
 
 		const token = generateToken( user.id.toString(), user.role === "admin" );
+		
 		setAuthCookie( res, token );
 		delete user.password;
 		delete user.role;
 		delete user.updatedAt;
-		delete user.id;
-		res.status( 200 ).json( {
-			...user,
-			name: getFirstAndLastName( user.name ),
-			fullName: user.name,
-			isAdmin: user.role === 'admin'
-		} );
+		delete user.id; 
+		res.status( 200 ).json({
+			acessToken: token,
+		});
 	} catch ( error ) {
 		next( error ); // Encaminha o erro para middlewares
 	}

@@ -210,7 +210,7 @@ GET {{host}}
 ### * Inactivate a question
 
 - Endpoint: POST {{base}}/question/inative-question
-- Description: Mark a question as inactive.
+- Description: Mark a question as inactive
 - Request Body:
 
   ```json

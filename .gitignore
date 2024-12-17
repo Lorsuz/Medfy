@@ -5,7 +5,11 @@ Todo.md
 .vscode
 gitsht
 
+.env
+**/*.env
+server/.env
 # CLIENT
+medfy-academy
 client/node_modules
 client/dist
 client/dist-ssr
@@ -25,14 +29,14 @@ client/*.ntvs*
 client/*.njsproj
 client/*.sln
 client/*.sw?
-client/.env
+# client/.env
 
 # SERVER
 server/node_modules
 server/auto
 server/dist
 server/dist
-server/.env
+# server/.env
 server/prisma/migrations
 server/prisma/database
 server/src/json/credentials.json

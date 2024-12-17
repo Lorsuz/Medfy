@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { helix } from "ldrs";
 export default function Loading() {
   helix.register();
+  
   return (
     <>
       <StyledComponent>

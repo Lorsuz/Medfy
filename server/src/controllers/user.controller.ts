@@ -7,7 +7,7 @@ import { users } from '../exports/preDatabase.js';
 import { verifyEmail, sendResetEmail } from '../services/email.service.js';
 import { registerUserSchema, newPasswordSchema, resetPasswordSchema, loginUserSchema } from '../schemas/auth.schema.js';
 
-// #region import users
+// #region import users 
 /**
  *	@desc			Import all user admin
  *	@route		POST /api/users/import-all
@@ -83,10 +83,21 @@ export const login = expressAsyncHandler( async ( req, res, next ) => {
 		delete user.updatedAt;
 		delete user.id; 
 		res.status( 200 ).json({
-			acessToken: token,
+			accessToken: token,
 		});
 	} catch ( error ) {
 		next( error ); // Encaminha o erro para middlewares
+	}
+} );
+
+export const getMyInfo = expressAsyncHandler( async ( req: any, res, next ) => {
+	try {
+		const { userId } = req.user;
+		const [[user]]: any = await pool.execute( 'SELECT * FROM users WHERE id = ?', [ userId ] );
+
+		res.status( 200 ).json( user );
+	} catch ( error ) {
+		next( error );
 	}
 } );
 

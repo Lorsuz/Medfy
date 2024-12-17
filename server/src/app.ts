@@ -58,7 +58,7 @@ app.get( '/', ( _, res, next ) => {
 
 app.use( '/api', indexRouter );
 app.use( '/api/user', userRouter );
-app.use( '/api/category', categoryRouter );
+app.use( '/api/category', categoryRouter ); 
 app.use( '/api/college', collegeRouter );
 app.use( '/api/question', questionRouter );
 

@@ -46,7 +46,7 @@ export const importUsers = expressAsyncHandler( async ( req, res, next ) => {
  **/
 
 export const login = expressAsyncHandler( async ( req, res, next ) => {
-	console.log("teste")
+	console.log( "teste" );
 	try {
 		const { email, password } = loginUserSchema.parse( req.body );
 
@@ -76,15 +76,15 @@ export const login = expressAsyncHandler( async ( req, res, next ) => {
 		}
 
 		const token = generateToken( user.id.toString(), user.role === "admin" );
-		
+
 		setAuthCookie( res, token );
 		delete user.password;
 		delete user.role;
 		delete user.updatedAt;
-		delete user.id; 
-		res.status( 200 ).json({
-			accessToken: token,
-		});
+		delete user.id;
+		res.status( 200 ).json( {
+			acessToken: token,
+		} );
 	} catch ( error ) {
 		next( error ); // Encaminha o erro para middlewares
 	}
@@ -215,10 +215,10 @@ export const UpdatePersonalInfo = expressAsyncHandler( async ( req: any, res, ne
 		if ( userRows.length > 0 ) {
 			const user = userRows[ 0 ];
 
-			const name: string = req.body.name ?? user.name ?? null;
-			const email: string = req.body.email ?? user.email ?? null;
-			const phone: number | string = req.body.phone ?? user.phone ?? null;
-			const cpf: string = req.body.cpf ?? user.cpf ?? null;
+			const name: string = req.body.name === undefined ? user.name : req.body.name;
+			const email: string = req.body.email === undefined ? user.email : req.body.email;
+			const phone: number | string = req.body.phone === undefined ? user.phone : req.body.phone;
+			const cpf: string = req.body.cpf === undefined ? user.cpf : req.body.cpf;
 
 			const [ updateResult ]: any = await pool.execute(
 				`UPDATE users SET name = ?, email = ?, phone = ?, cpf=?  WHERE id = ?`,
@@ -262,10 +262,10 @@ export const UpdateAcademicInfo = expressAsyncHandler( async ( req: any, res, ne
 		if ( userRows.length > 0 ) {
 			const user = userRows[ 0 ];
 
-			const university = req.body.university ?? user.university ?? null;
-			const period = req.body.period ?? user.period ?? null;
-			const specialty = req.body.specialty ?? user.specialty ?? null;
-			const trainingYear = req.body.trainingYear ?? user.trainingYear ?? null;
+			const university = req.body.university === undefined ? user.university : req.body.university;
+			const period = req.body.period === undefined ? user.period : req.body.period;
+			const specialty = req.body.specialty === undefined ? user.specialty : req.body.specialty;
+			const trainingYear = req.body.trainingYear === undefined ? user.trainingYear : req.body.trainingYear;
 
 			const [ updateResult ]: any = await pool.execute(
 				`UPDATE users SET university = ?, period = ?, specialty = ?, trainingYear = ?  WHERE id = ?`,
@@ -314,7 +314,7 @@ export const UpdateMeetBy = expressAsyncHandler( async ( req: any, res, next ) =
 		if ( userRows.length > 0 ) {
 			const user = userRows[ 0 ];
 
-			const meetBy = req.body.meetBy ?? user.meetBy ?? null;
+			const meetBy = req.body.meetBy === undefined ? user.meetBy : req.body.meetBy;
 
 			const [ updateResult ]: any = await pool.execute(
 				`UPDATE users SET meetBy = ?  WHERE id = ?`,

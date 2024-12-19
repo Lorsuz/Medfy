@@ -172,6 +172,7 @@ export const verifyToken = expressAsyncHandler( async ( req, res, next ) => {
 } );
 
 // #endregion
+
 export const validateJWT = expressAsyncHandler( async ( req: any, res, next ) => {
 	try {
 		const user = req.user;
@@ -191,8 +192,8 @@ export const validateJWT = expressAsyncHandler( async ( req: any, res, next ) =>
 // #region update profile
 
 /**
- *	@desc			auth user & get token
- *	@route		POST /api/users/login
+ *	@desc			
+ *	@route		PUT /api/users/update/personal-info
  *	@access		private
  **/
 
@@ -203,10 +204,10 @@ export const UpdatePersonalInfo = expressAsyncHandler( async ( req: any, res, ne
 		if ( userRows.length > 0 ) {
 			const user = userRows[ 0 ];
 
-			const name: string = req.body.name || user.name;
-			const email: string = req.body.email || user.email;
-			const phone: number | string = req.body.phone || user.phone;
-			const cpf: string = req.body.cpf || user.cpf;
+			const name: string = req.body.name ?? user.name ?? null;
+			const email: string = req.body.email ?? user.email ?? null;
+			const phone: number | string = req.body.phone ?? user.phone ?? null;
+			const cpf: string = req.body.cpf ?? user.cpf ?? null;
 
 			const [ updateResult ]: any = await pool.execute(
 				`UPDATE users SET name = ?, email = ?, phone = ?, cpf=?  WHERE id = ?`,
@@ -239,7 +240,7 @@ export const UpdatePersonalInfo = expressAsyncHandler( async ( req: any, res, ne
 
 /**
  *	@desc			auth user & get token
- *	@route		POST /api/users/login
+ *	@route		PUT /api/users/update/academic-info
  *	@access		private
  **/
 
@@ -250,10 +251,10 @@ export const UpdateAcademicInfo = expressAsyncHandler( async ( req: any, res, ne
 		if ( userRows.length > 0 ) {
 			const user = userRows[ 0 ];
 
-			const university = req.body.university || user.university;
-			const period = req.body.period || user.period;
-			const specialty = req.body.specialty || user.specialty;
-			const trainingYear = req.body.trainingYear || user.trainingYear;
+			const university = req.body.university ?? user.university ?? null;
+			const period = req.body.period ?? user.period ?? null;
+			const specialty = req.body.specialty ?? user.specialty ?? null;
+			const trainingYear = req.body.trainingYear ?? user.trainingYear ?? null;
 
 			const [ updateResult ]: any = await pool.execute(
 				`UPDATE users SET university = ?, period = ?, specialty = ?, trainingYear = ?  WHERE id = ?`,
@@ -287,7 +288,7 @@ export const UpdateAcademicInfo = expressAsyncHandler( async ( req: any, res, ne
 
 /**
  *	@desc			auth user & get token
- *	@route		POST /api/users/login
+ *	@route		PUT /api/users/update/meet-by
  *	@access		private
  **/
 
@@ -302,7 +303,7 @@ export const UpdateMeetBy = expressAsyncHandler( async ( req: any, res, next ) =
 		if ( userRows.length > 0 ) {
 			const user = userRows[ 0 ];
 
-			const meetBy = req.body.meetBy || user.meetBy;
+			const meetBy = req.body.meetBy ?? user.meetBy ?? null;
 
 			const [ updateResult ]: any = await pool.execute(
 				`UPDATE users SET meetBy = ?  WHERE id = ?`,
@@ -423,8 +424,8 @@ export const resetPassword = expressAsyncHandler( async ( req, res, next ) => {
 // #region change password
 
 /**
- *	@desc			auth user & get token
- *	@route		POST /api/users/login
+ *	@desc			
+ *	@route		POST /api/users/change-password
  *	@access		private
  **/
 
@@ -469,7 +470,7 @@ export const changePassword = expressAsyncHandler( async ( req: any, res, next )
 
 /**
  * @desc Delete user
- * @route DELETE /api/users/users
+ * @route DELETE /api/users
  * @access private
  **/
 

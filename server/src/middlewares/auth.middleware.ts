@@ -5,7 +5,7 @@ export const generateToken = ( id: number | string, isAdmin: boolean ): string =
 
 export const isAuthenticated = expressAsyncHandler( async ( req: Request & { user?: any; }, res: Response, next: NextFunction ) => {
 	try {
-		const token = req.headers.authorization?.split( ' ' )[ 1 ];
+		const token = req.cookies.authToken;
 
 		if ( !token ) {
 			throw new ApiError( 'Faça login para acessar esta página', 401 );

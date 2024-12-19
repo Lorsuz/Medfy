@@ -83,7 +83,10 @@ export const login = expressAsyncHandler( async ( req, res, next ) => {
 		delete user.updatedAt;
 		delete user.id;
 		res.status( 200 ).json( {
-			acessToken: token,
+			...user,
+			name: getFirstAndLastName( user.name ),
+			fullName: user.name,
+			isAdmin: user.role === 'admin'
 		} );
 	} catch ( error ) {
 		next( error ); // Encaminha o erro para middlewares

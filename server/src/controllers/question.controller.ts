@@ -219,7 +219,6 @@ export const deleteQuestion = expressAsyncHandler( async ( req: any, res, next )
 
 export const getAvailableQuestions = expressAsyncHandler( async ( req: any, res, next ) => {
 	try {
-
 		const { year, college, category, total } = req.body;
 		const userId = req.user.id;
 

@@ -227,11 +227,13 @@ export const getAvailableQuestions = expressAsyncHandler( async ( req: any, res,
 			throw new ApiError( 'Parâmetros inválidos', 400 );
 		}
 
-		// Passo 1: Obter categorias descendentes
-		const [ categories ]: any = await pool.query(
-			`WITH RECURSIVE category_tree AS (
-							SELECT id, categoryName, parentId
-							FROM categories
+		let categories: any = [];
+		try {
+			// Passo 1: Obter categorias descendentes
+			[ categories ] = await pool.query(
+				`WITH RECURSIVE category_tree AS (
+					SELECT id, categoryName, parentId
+					FROM categories
 							WHERE id = ?
 							UNION ALL
 							SELECT c.id, c.categoryName, c.parentId
@@ -239,8 +241,14 @@ export const getAvailableQuestions = expressAsyncHandler( async ( req: any, res,
 							INNER JOIN category_tree ct ON c.parentId = ct.id
 					)
 					SELECT id FROM category_tree`,
-			[ category ]
-		);
+				[ category ]
+			);
+		} catch ( error ) {
+			console.error( "Erro ao filtrar categorias descendentes" );
+			throw new ApiError( 'Nenhuma questão disponível', 404 );
+		}
+
+		categories = [];
 
 		const categoryIds = categories.map( ( cat: any ) => cat.id );
 

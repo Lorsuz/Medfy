@@ -9,7 +9,7 @@ Todo.md
 **/*.env
 server/.env
 # CLIENT
-medfy-academy
+# medfy-academy
 client/node_modules
 client/dist
 client/dist-ssr

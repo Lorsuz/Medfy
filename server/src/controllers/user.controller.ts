@@ -77,7 +77,7 @@ export const login = expressAsyncHandler( async ( req, res, next ) => {
 
 		const token = generateToken( user.id.toString(), user.role === "admin" );
 
-		setAuthCookie( res, token );
+		setAuthCookie( res, token );okie( res, token );okie( res, token );
 		delete user.password;
 		delete user.role;
 		delete user.updatedAt;

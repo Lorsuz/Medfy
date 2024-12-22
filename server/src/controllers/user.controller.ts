@@ -77,7 +77,7 @@ export const login = expressAsyncHandler( async ( req, res, next ) => {
 
 		const token = generateToken( user.id.toString(), user.role === "admin" );
 
-		setAuthCookie( res, token );okie( res, token );okie( res, token );
+		setAuthCookie( res, token );
 		delete user.password;
 		delete user.role;
 		delete user.updatedAt;
@@ -542,6 +542,5 @@ export const logOut = expressAsyncHandler( async ( req, res, next ) => {
 	} catch ( error ) {
 		next( error );
 	}
-} );
-
+});
 // #endregion

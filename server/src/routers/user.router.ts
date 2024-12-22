@@ -13,7 +13,6 @@ router.post( '/import-all', UserController.importUsers );
 router.get( '/verify-token', UserController.verifyToken );
 
 router.post( '/register', UserController.register );
-router.get( '/@me', isAuthenticated, UserController.getMyInfo );
 router.post( '/login', loginRateLimiter, UserController.login );
 router.get( '/validate-token', isAuthenticated, UserController.validateJWT );
 
@@ -22,9 +21,9 @@ router.post( '/reset-password', UserController.resetPassword );
 
 router.put( '/change-password', isAuthenticated, UserController.changePassword );
 
-router.route('/update/personal-info').put( isAuthenticated, UserController.UpdatePersonalInfo )
-router.route('/update/academic-info').put( isAuthenticated, UserController.UpdateAcademicInfo )
-router.route('/update/meet-by').put( isAuthenticated, UserController.UpdateMeetBy )
+router.route('/personal-info').put( isAuthenticated, UserController.UpdatePersonalInfo )
+router.route('/academic-info').put( isAuthenticated, UserController.UpdateAcademicInfo )
+router.route('/meet-by').put( isAuthenticated, UserController.UpdateMeetBy )
  
 router.post( '/logout', isAuthenticated, UserController.logOut );
 // router.get( '/user-dashboard', isAuthenticated, UserController.logOut );

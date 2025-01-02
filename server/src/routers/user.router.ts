@@ -26,5 +26,6 @@ router.patch( '/change-password', isAuthenticated, UserController.changePassword
 
 // router.get( '/user-dashboard', isAuthenticated, UserController.logOut );
 // router.get( '/admin-dashboard', isAuthenticated, UserController.logOut );
+// router.get( '/admin-dashboard', isAuthenticated, UserController.logOut );
 
 export default router;

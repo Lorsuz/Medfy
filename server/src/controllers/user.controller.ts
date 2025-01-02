@@ -82,10 +82,33 @@ export const login = expressAsyncHandler( async ( req, res, next ) => {
 		delete user.role;
 		delete user.updatedAt;
 		delete user.id;
+
+		const createdAt = new Date( user.createdAt );
+
+		// Add 7 days to the registration date to calculate the trial end date
+		const trialEndDate: any = new Date( createdAt );
+		trialEndDate.setDate( trialEndDate.getDate() + 7 );
+		trialEndDate.setHours( 0, 0, 0, 0 ); // Set to midnight of the trial end date
+
+		// Calculate the remaining time until the trial ends at midnight
+		const currentMoment: any = new Date();
+		const timeDifference = trialEndDate - currentMoment;
+
+		let remainingTime = "The trial period has ended.";
+		if ( timeDifference > 0 ) {
+			const days = Math.floor( timeDifference / ( 1000 * 60 * 60 * 24 ) );
+			const hours = Math.floor( ( timeDifference % ( 1000 * 60 * 60 * 24 ) ) / ( 1000 * 60 * 60 ) );
+			const minutes = Math.floor( ( timeDifference % ( 1000 * 60 * 60 ) ) / ( 1000 * 60 ) );
+			const seconds = Math.floor( ( timeDifference % ( 1000 * 60 ) ) / 1000 );
+
+			remainingTime = `${ days } days, ${ hours } hours, ${ minutes } minutes, ${ seconds } seconds`;
+		}
+
 		res.status( 200 ).json( {
 			...user,
 			name: getFirstAndLastName( user.name ),
 			fullName: user.name,
+			timeForEndTrial: remainingTime, // Send remaining time
 			isAdmin: user.role === 'admin'
 		} );
 	} catch ( error ) {
@@ -93,10 +116,11 @@ export const login = expressAsyncHandler( async ( req, res, next ) => {
 	}
 } );
 
+
 export const getMyInfo = expressAsyncHandler( async ( req: any, res, next ) => {
 	try {
 		const { userId } = req.user;
-		const [[user]]: any = await pool.execute( 'SELECT * FROM users WHERE id = ?', [ userId ] );
+		const [ [ user ] ]: any = await pool.execute( 'SELECT * FROM users WHERE id = ?', [ userId ] );
 
 		res.status( 200 ).json( user );
 	} catch ( error ) {
@@ -542,5 +566,5 @@ export const logOut = expressAsyncHandler( async ( req, res, next ) => {
 	} catch ( error ) {
 		next( error );
 	}
-});
+} );
 // #endregion

@@ -16,6 +16,8 @@ import indexRouter from './routers/index.router.js';
 import userRouter from './routers/user.router.js';
 import categoryRouter from './routers/category.router.js';
 import collegeRouter from './routers/college.router.js';
+import planRouter from './routers/plan.router.js';
+import subscriptionRouter from './routers/subscription.router.js';
 import questionRouter from './routers/question.router.js';
 
 const app: Application = express();
@@ -61,6 +63,8 @@ app.use( '/api/user', userRouter );
 app.use( '/api/category', categoryRouter ); 
 app.use( '/api/college', collegeRouter );
 app.use( '/api/question', questionRouter );
+app.use( '/api/subscription', subscriptionRouter );
+app.use( '/api/plan', planRouter );
 
 app.use( errorHandler );
 

@@ -9,7 +9,7 @@ import ApiError from '../classes/ApiError.class.js';
 import { fileURLToPath } from 'url';
 import { parseISO, format } from 'date-fns';
 import util from 'util';
-import mercadopago from 'mercadopago';
+import { MercadoPagoConfig } from 'mercadopago';
 import generateStrongKey from '../utils/generateStrongKey.js';
 
 import { promises as fs } from 'fs';
@@ -20,13 +20,10 @@ import pool from './conn.config.js';
 const __filename = fileURLToPath( import.meta.url );
 const __dirname = path.dirname( __filename );
 
-	
+
 const secretKey: string = "secretKey";
 
-// mercadopago.configure({
-// 	access_token: 'TEST-5193570165554565-111913-33c96f9e183fcfc52d2b1e4292f97c8a-826294035'
-// });
-
+const client = new MercadoPagoConfig( { accessToken: process.env.MERCADO_PAGO_API_KEY || '' } );
 
 
 // router.use(express.static(path.join(__dirname, 'public')));
@@ -57,7 +54,6 @@ export {
 	crypto,
 	express,
 	format,
-	mercadopago,
 	fs,
 	jwt,
 	multer,

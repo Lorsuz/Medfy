@@ -4,7 +4,7 @@ import { nodemailerConfig } from '../config/nodemailer.config.js';
 import mjml2html from 'mjml';
 
 // Função auxiliar para enviar e-mails
-const sendEmail = async ( email: string, subject: string, text: string, mjml:any ) => {
+const sendEmail = async ( email: string, subject: string, text: string, mjml: any ) => {
 	try {
 		const config = await nodemailerConfig();
 		const transporter = nodemailer.createTransport( config );
@@ -24,7 +24,7 @@ const sendEmail = async ( email: string, subject: string, text: string, mjml:any
 
 		const html = mjmlOutput.html;
 
-		const info:any = await transporter.sendMail( {
+		const info: any = await transporter.sendMail( {
 			from: process.env.ADMIN_EMAIL,
 			to: email,
 			subject,

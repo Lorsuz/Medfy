@@ -1,5 +1,5 @@
 import expressAsyncHandler from 'express-async-handler';
-import { pool, ApiError } from '../config/router.config.js';
+import { pool, ApiError, exec } from '../config/router.config.js';
 import multer from 'multer';
 import path from 'path';
 
@@ -176,7 +176,9 @@ export const updateQuestion = expressAsyncHandler( async ( req: any, res, next )
 				return next( new ApiError( 'Erro no upload da imagem', 400 ) );
 			}
 
-			const { questionId, categoryId, collegeId, question, justification, year, options, optionRight } = req.body;
+			const { id: questionId } = req.params;
+
+			const { categoryId, collegeId, question, justification, year, options, optionRight } = req.body;
 
 			// URL da imagem (ou caminho local se for o caso)
 			let imageUrl: any = null;
@@ -340,9 +342,9 @@ export const getAvailableQuestions = expressAsyncHandler( async ( req: any, res,
 	}
 } );
 
-export const inativeQuestion = expressAsyncHandler( async ( req: any, res, next ) => {
+export const disableQuestion = expressAsyncHandler( async ( req: any, res, next ) => {
 	try {
-		const { questionId } = req.body;
+		const { id: questionId } = req.params;
 		await pool.query( 'UPDATE questions SET cancelled = 1 WHERE id = ?', [ questionId ] );
 		res.json( { message: 'Questão inativada' } );
 	} catch ( error ) {
@@ -359,6 +361,31 @@ export const getYears = expressAsyncHandler( async ( req: any, res, next ) => {
 		else {
 			res.status( 200 ).json( rows );
 		}
+	} catch ( error ) {
+		next( error );
+	}
+} );
+
+
+
+export const uploadPdfWithPy = expressAsyncHandler( async ( req: any, res, next ) => {
+	try {
+		const filePath = req.file.path || '';
+		console.log( filePath );
+
+		exec( `python ../script/api_GPT_code_transfer.py ${ filePath }`, ( error, stdout, stderr ) => {
+			if ( error ) {
+				console.error( `Erro: ${ error.message }` );
+				throw new ApiError( "Erro ao processar o PDF", 500 );
+
+			}
+			if ( stderr ) {
+				console.error( `stderr: ${ stderr }` );
+				throw new ApiError( "Erro no processamento", 500 );
+			}
+			console.log( `stdout: ${ stdout }` );
+			return res.json( { message: 'PDF processado com sucesso' } );
+		} );
 	} catch ( error ) {
 		next( error );
 	}
